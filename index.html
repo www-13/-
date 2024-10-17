@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #219150;
+        }
+
+        .notification-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f9e7;
+            border: 1px solid #b2e6b2;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notification</h1>
+    <p>You will receive the message "صلي علي النبي".</p>
+
+    <button id="send-notification">Send Notification Now</button>
+
+    <div class="notification-info">
+        <p>Click the button above to send a notification immediately. You will receive notifications based on your chosen frequency. <br> اجر لي ولك
+        </p>
+    </div>
+
+    <script>
+        let notificationInterval = 60000; // Default to 60 seconds
+
+        // Function to request notification permission
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        setNotificationInterval();
+                    } else {
+                        alert("Notification permission denied.");
+                    }
+                });
+            } else {
+                alert("This browser does not support notifications.");
+            }
+        }
+
+        // Function to prompt user for notification interval
+        function setNotificationInterval() {
+            let userInput = prompt("How often would you like to receive notifications (in seconds)?", "60");
+            if (userInput) {
+                let interval = parseInt(userInput);
+                if (!isNaN(interval) && interval > 0) {
+                    notificationInterval = interval * 1000; // Convert seconds to milliseconds
+                    startNotifications();
+                } else {
+                    alert("Please enter a valid number greater than 0. Defaulting to 60 seconds.");
+                    startNotifications();
+                }
+            } else {
+                alert("No input provided. Defaulting to 60 seconds.");
+                startNotifications();
+            }
+        }
+
+        // Function to create and display a notification
+        function showNotification() {
+            const notification = new Notification("New Message", {
+                body: "صلي علي النبي",
+                icon: "" // Optional: leave empty for default icon
+            });
+
+            notification.onclick = function() {
+                console.log("Notification clicked");
+            };
+        }
+
+        // Function to start sending notifications based on user interval
+        function startNotifications() {
+            setInterval(showNotification, notificationInterval);
+        }
+
+        // Add event listener to button
+        document.getElementById('send-notification').addEventListener('click', showNotification);
+
+        // Request permission on page load
+        window.onload = requestNotificationPermission;
+    </script>
+</body>
+</html>
